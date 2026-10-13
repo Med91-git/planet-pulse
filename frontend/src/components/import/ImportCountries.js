@@ -8,10 +8,14 @@ class ImportCountries extends AppComponent {
 
     template() {
         return /*html*/`
-            <button type="button" class="btn btn-primary btn-lg">Import Countries 🌍</button>
+            <button type="button" class="btn btn-primary btn-lg import_button">Import Countries 🌍</button>
         `;
     }
 
+    afterRender(){
+        document.addEventListener(type, listener, options)
+
+    }
 
 }
 
