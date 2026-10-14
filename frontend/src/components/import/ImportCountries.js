@@ -1,20 +1,21 @@
 import AppComponent from '../../../lib/AppComponent.js';
-
+import getAllCountries from '../../services/api.js';
 class ImportCountries extends AppComponent {
 
     beforeRender() {
-       // this.state = {}; TODO! Import countries here
+       // this.state = {}; 
     }
 
     template() {
         return /*html*/`
-            <button type="button" class="btn btn-primary btn-lg import_button">Import Countries 🌍</button>
+            <button id="country-import" type="button" class="btn btn-primary btn-lg">Import Countries 🌍</button>
         `;
     }
 
     afterRender(){
-        document.addEventListener(type, listener, options)
-
+        const countryImportButton = document.querySelector("#country-import");
+        console.log(countryImportButton);
+        countryImportButton.addEventListener('click',getAllCountries);
     }
 
 }
