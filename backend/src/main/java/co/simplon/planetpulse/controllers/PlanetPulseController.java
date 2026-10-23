@@ -18,13 +18,13 @@ public class PlanetPulseController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public PlanetPulseView postPlanetPulse(@RequestBody @Valid PlanetPulseCreate inputs) {
-        // 1. Manually check if all indicators are missing
+        // Manually check if all indicators are missing
         if (inputs.hasNoIndicators()) {
             // Returns an empty HTTP response body (null)
             return null;
         }
 
-        // 2. Normal behavior if at least one indicator is present
+        // Normal behavior if at least one indicator is present
         StringBuilder mockName = new StringBuilder("Created record for year " + inputs.year() + " with: ");
         if (inputs.co2Emission() != null) mockName.append("CO2=").append(inputs.co2Emission()).append(" ");
         if (inputs.forestArea() != null) mockName.append("Forest=").append(inputs.forestArea()).append(" ");

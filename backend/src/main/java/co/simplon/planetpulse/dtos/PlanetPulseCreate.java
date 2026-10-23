@@ -19,7 +19,8 @@ public record PlanetPulseCreate(
         @Positive(message = "PM exposure must be a positive number")
         Double pmExposure
 ) {
-        // We keep the method helper, but WITHOUT @AssertTrue
+        // Helper method: Checks if the user left ALL environmental fields blank.
+        // It returns 'true' only if Forest, CO2, Renewable Energy, and PM are ALL empty (null).
         public boolean hasNoIndicators() {
                 return forestArea == null
                         && co2Emission == null
