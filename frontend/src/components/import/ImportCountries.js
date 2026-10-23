@@ -14,9 +14,9 @@ class ImportCountries extends AppComponent {
 
     afterRender(){
         const countryImportButton = document.querySelector("#country-import");
-        console.log(countryImportButton);
         countryImportButton.addEventListener('click',getAllCountries);
     }
+    
 
 }
 
