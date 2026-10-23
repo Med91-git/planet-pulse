@@ -1,5 +1,7 @@
+backend/target/
+backend/.idea/
+backend/*.class
+backend/*.iml
+backend/*.iws
+backend/*.ipr
 .DS_Store
-.env
-.vscode
-.env.json
-.idea
