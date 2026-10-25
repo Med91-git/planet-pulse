@@ -1,5 +1,7 @@
 import AppComponent from '../../../lib/AppComponent.js';
 import getAllCountries from '../../services/api.js';
+import externalization from '../../services/externalization.js';
+
 class ImportCountries extends AppComponent {
 
     beforeRender() {
@@ -8,7 +10,7 @@ class ImportCountries extends AppComponent {
 
     template() {
         return /*html*/`
-            <button id="country-import" type="button" class="btn btn-primary btn-lg">Import Countries 🌍</button>
+            <button id="country-import" type="button" class="btn btn-primary btn-lg">${externalization("import.button")}</button>
         `;
     }
 

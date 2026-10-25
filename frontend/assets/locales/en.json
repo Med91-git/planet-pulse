@@ -1,0 +1,14 @@
+{
+  "header": {
+    "title": "\uD83C\uDF0D Planet Pulse",
+    "home" : "Home",
+    "countries" : "Countries"
+  },
+  "homepage": {
+    "title" : "Planet Pulse",
+    "subtitle" : "Track various environmental indicators by country"
+  },
+  "import": {
+    "button": "Import Countries \uD83C\uDF0D"
+  }
+}
