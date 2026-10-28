@@ -6,3 +6,5 @@ backend/*.iws
 backend/*.ipr
 .DS_Store
 .idea
+
+config.env.json
