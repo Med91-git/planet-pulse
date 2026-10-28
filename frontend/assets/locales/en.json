@@ -10,5 +10,28 @@
   },
   "import": {
     "button": "Import Countries \uD83C\uDF0D"
+  },
+  "indicator": {
+    "title": "Add Yearly Environmental Indicators",
+    "label_co2_emissions": "CO₂ emissions",
+    "unit_co2_emissions": "metric tons",
+    "placeholder_co2_emissions": "e.g. 4.5",
+    "label_renewable_energy_share": "Renewable energy share",
+    "unit_renewable_energy_share": "%",
+    "placeholder_renewable_energy_share": "e.g. 25.0",
+    "label_forest_area": "Forest area",
+    "unit_forest_area": "%",
+    "placeholder_forest_area": "e.g. 30.5",
+    "label_pm25_exposure": "PM2.5 exposure",
+    "unit_pm25_exposure": "µg/m³",
+    "placeholder_pm25_exposure": "e.g. 12.4",
+    "label_year": "Year",
+    "btn_reset": "Reset",
+    "btn_save": "Save Indicators",
+    "btn_saving": "Saving...",
+    "validation_error": "Please fill out all fields correctly.",
+    "save_success": "Environmental indicators saved successfully!",
+    "missing_country_id": "Missing target country identifier.",
+    "unexpected_error": "An unexpected error occurred. Please try again."
   }
 }
