@@ -2,7 +2,6 @@ indicator-countries {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: red; */
   padding: 20px;
   font-weight: bold;
 }

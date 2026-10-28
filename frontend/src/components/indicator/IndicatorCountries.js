@@ -1,5 +1,6 @@
 import AppComponent from "../../../lib/AppComponent.js";
 import postIndicatorCountry from "../../services/indicatorService.js";
+import externalization from "../../services/externalization.js";
 
 class IndicatorCountries extends AppComponent {
   /**
@@ -9,40 +10,40 @@ class IndicatorCountries extends AppComponent {
     // Extract country ID from component attribute or query parameters
     this.countryId = this.getAttribute("country-id") || new URLSearchParams(window.location.search).get("id");
 
-    // Configure environmental indicators setup
+    // Configure environmental indicators setup with externalized strings
     this.indicators = [
       {
-        key: "co2_emissions",
-        label: "CO₂ emissions",
-        unit: "metric tons per capita",
-        placeholder: "e.g. 4.5",
+        key: "co2Emissions",
+        label: externalization("indicator.label_co2_emissions"),
+        unit: externalization("indicator.unit_co2_emissions"),
+        placeholder: externalization("indicator.placeholder_co2_emissions"),
         min: 0,
         max: 100,
         step: 0.01
       },
       {
-        key: "renewable_energy_share",
-        label: "Renewable energy share",
-        unit: "%",
-        placeholder: "e.g. 25.0",
+        key: "renewableEnergyShare",
+        label: externalization("indicator.label_renewable_energy_share"),
+        unit: externalization("indicator.unit_renewable_energy_share"),
+        placeholder: externalization("indicator.placeholder_renewable_energy_share"),
         min: 0,
         max: 100,
         step: 0.1
       },
       {
-        key: "forest_area",
-        label: "Forest area",
-        unit: "%",
-        placeholder: "e.g. 30.5",
+        key: "forestArea",
+        label: externalization("indicator.label_forest_area"),
+        unit: externalization("indicator.unit_forest_area"),
+        placeholder: externalization("indicator.placeholder_forest_area"),
         min: 0,
         max: 100,
         step: 0.1
       },
       {
-        key: "pm25_exposure",
-        label: "PM2.5 exposure",
-        unit: "µg/m³",
-        placeholder: "e.g. 12.4",
+        key: "pm25Exposure",
+        label: externalization("indicator.label_pm25_exposure"),
+        unit: externalization("indicator.unit_pm25_exposure"),
+        placeholder: externalization("indicator.placeholder_pm25_exposure"),
         min: 0,
         max: 500,
         step: 0.1
@@ -59,7 +60,7 @@ class IndicatorCountries extends AppComponent {
   template() {
     const indicatorFieldsHTML = this.indicators
       .map(
-        (ind) => `
+        (ind) => /*html*/ `
         <div class="mb-3">
           <label for="input-${ind.key}" class="form-label font-weight-bold">
             ${ind.label} <span class="text-muted">(${ind.unit})</span>
@@ -74,7 +75,6 @@ class IndicatorCountries extends AppComponent {
               min="${ind.min}" 
               max="${ind.max}" 
               step="${ind.step}"
-              required
             >
             <span class="input-group-text">${ind.unit}</span>
           </div>
@@ -83,9 +83,9 @@ class IndicatorCountries extends AppComponent {
       )
       .join("");
 
-    return `
+    return /*html*/ `
       <div class="card p-4 shadow-sm">
-        <h4 class="mb-3">Add Yearly Environmental Indicators</h4>
+        <h4 class="mb-3">${externalization("indicator.title")}</h4>
         
         <!-- Feedback alert container -->
         <div id="feedback-message" class="d-none alert" role="alert"></div>
@@ -93,7 +93,7 @@ class IndicatorCountries extends AppComponent {
         <form id="indicator-form" novalidate>
           <!-- Year input field -->
           <div class="mb-3">
-            <label for="input-year" class="form-label font-weight-bold">Year</label>
+            <label for="input-year" class="form-label font-weight-bold">${externalization("indicator.label_year")}</label>
             <input 
               type="number" 
               class="form-control" 
@@ -114,10 +114,10 @@ class IndicatorCountries extends AppComponent {
           <!-- Form actions -->
           <div class="d-flex justify-content-end gap-2 mt-4">
             <button type="button" id="btn-reset" class="btn btn-outline-secondary px-4">
-              Reset
+              ${externalization("indicator.btn_reset")}
             </button>
             <button type="submit" id="btn-save" class="btn btn-primary px-4">
-              Save Indicators
+              ${externalization("indicator.btn_save")}
             </button>
           </div>
         </form>
@@ -142,21 +142,33 @@ class IndicatorCountries extends AppComponent {
       // Form validation check
       if (!form.checkValidity()) {
         form.classList.add("was-validated");
-        this.showFeedback("Please fill out all fields correctly.", "danger");
+        this.showFeedback(externalization("indicator.validation_error"), "danger");
         return;
       }
 
-      // Format payload data for submission
+      // Format payload data flat structure matching Spring Boot DTO
       const formData = new FormData(form);
+      
+      const parseValue = (val) => (val && val.trim() !== "" ? parseFloat(val) : null);
+
       const payload = {
         year: parseInt(formData.get("year"), 10),
-        indicators: {
-          co2_emissions: parseFloat(formData.get("co2_emissions")),
-          renewable_energy_share: parseFloat(formData.get("renewable_energy_share")),
-          forest_area: parseFloat(formData.get("forest_area")),
-          pm25_exposure: parseFloat(formData.get("pm25_exposure"))
-        }
+        co2Emissions: parseValue(formData.get("co2Emissions")),
+        renewableEnergyShare: parseValue(formData.get("renewableEnergyShare")),
+        forestArea: parseValue(formData.get("forestArea")),
+        pm25Exposure: parseValue(formData.get("pm25Exposure"))
       };
+
+      // Check client side if at least one indicator is filled
+      const hasValue = payload.co2Emissions !== null || 
+                       payload.renewableEnergyShare !== null || 
+                       payload.forestArea !== null || 
+                       payload.pm25Exposure !== null;
+
+      if (!hasValue) {
+        this.showFeedback(externalization("indicator.validation_error"), "danger");
+        return;
+      }
 
       // Submit indicators payload
       await this.saveIndicators(payload, form);
@@ -190,18 +202,18 @@ class IndicatorCountries extends AppComponent {
   async saveIndicators(payload, form) {
     const saveBtn = this.querySelector("#btn-save");
     saveBtn.disabled = true;
-    saveBtn.innerText = "Saving...";
+    saveBtn.innerText = externalization("indicator.btn_saving");
 
     try {
       if (!this.countryId) {
-        throw new Error("Missing target country identifier.");
+        throw new Error(externalization("indicator.missing_country_id"));
       }
 
       // Call API service
       const result = await postIndicatorCountry(this.countryId, payload);
 
       // Handle successful operation
-      this.showFeedback("Environmental indicators saved successfully!", "success");
+      this.showFeedback(externalization("indicator.save_success"), "success");
       this.resetForm(form);
 
       // Notify parent/sibling components of data updates
@@ -209,10 +221,10 @@ class IndicatorCountries extends AppComponent {
 
     } catch (error) {
       // Handle failed operations
-      this.showFeedback(error.message || "An unexpected error occurred. Please try again.", "danger");
+      this.showFeedback(error.message || externalization("indicator.unexpected_error"), "danger");
     } finally {
       saveBtn.disabled = false;
-      saveBtn.innerText = "Save Indicators";
+      saveBtn.innerText = externalization("indicator.btn_save");
     }
   }
 
